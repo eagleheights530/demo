@@ -106,7 +106,7 @@
     }
   }
 
-  const backend_host = 'https://backendzixin.azurewebsites.net';
+  const backend_host = '';
   function uploadImage(data) {
     fetch(backend_host + '/images', {
       method: 'POST',
