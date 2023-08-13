@@ -3,7 +3,7 @@ COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package
  
-FROM openjdk:18-oracle
+FROM openjdk:18-slim-bullseye
 WORKDIR /app
 COPY --from=builder /usr/src/app/target/backend-0.0.1-SNAPSHOT.jar /app/backend-0.0.1-SNAPSHOT.jar
 ENV SERVER_PORT 80
