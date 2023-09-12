@@ -16,7 +16,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
         - name: backend
-          image: demozixin.azurecr.io/backend:5
+          image: demozixin.azurecr.io/backend:7
           env:
             - name: ALLOW_EMPTY_PASSWORD
               value: "yes"
@@ -58,7 +58,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
         - name: frontend
-          image: demozixin.azurecr.io/frontend:5
+          image: demozixin.azurecr.io/frontend:7
           ports:
             - containerPort: 80
           resources:
