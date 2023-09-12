@@ -1,0 +1,10 @@
+az aks create \
+    --resource-group lab \
+    --name myAKSCluster \
+    --node-count 1 \
+    --generate-ssh-keys \
+    --attach-acr demozixin
+
+ az aks get-credentials --resource-group lab --name myAKSCluster1
+
+kubectl get nodes

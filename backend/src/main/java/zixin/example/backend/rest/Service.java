@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.util.Base64;
 import java.util.UUID;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,10 +24,17 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 
+import zixin.example.backend.dao.DbRepositary;
+import zixin.example.backend.dao.Image;
+import zixin.example.backend.dao.User;
+
 @RestController
 @CrossOrigin(origins = "${FRONTEND_HOST:*}") // Devops best practice, don't hardcode
 
 public class Service {
+    @Autowired
+    DbRepositary sqlDb;
+
     private final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=zixinchi;AccountKey=suuxxnadymD+Wk9B1yo+YCSymj2DrdgelGyp8U6Y6o3G9I69jPV8BGPTsJh7wIkcSPc6LoKAzcba+ASt+m3z8w==;EndpointSuffix=core.windows.net";
     @GetMapping("/greeting")
     public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
@@ -49,6 +58,29 @@ public class Service {
         byte[] rawBytes = Base64.getDecoder().decode(base64);
         return CustomVision.validate(rawBytes);
     }
+
+    @PostMapping("/form")
+    public ResponseEntity<String> submit(@RequestBody String data) throws IOException {
+        JSONObject jsonObject= new JSONObject(data);
+        String name = jsonObject.getString("name");
+        String email = jsonObject.getString("email");
+        String base64 = jsonObject.getString("image").replace("data:image/png;base64,", "");
+        byte[] rawBytes = Base64.getDecoder().decode(base64);
+
+        UUID uuid = UUID.randomUUID();
+        String userId = uuid.toString();
+
+        User user = new User(userId, name, email, null);
+        Image image = new Image(userId, userId, rawBytes,  null);
+
+        sqlDb.saveUser(user);
+        sqlDb.saveImage(image);
+
+        ResponseEntity<String> result = new ResponseEntity<String>(HttpStatus.OK);
+
+        return result;
+
+    }   
 
     private void saveImageToFile(byte[] image, String imageName) throws IOException {
         File path = new File("./images/");
