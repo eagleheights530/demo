@@ -1,4 +1,4 @@
-package zixin.example.backend.rest;
+package zixin.example.backend.service;
 
 import java.net.URI;
 import java.util.HashMap;

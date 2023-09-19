@@ -1,4 +1,4 @@
-package zixin.example.backend.rest;
+package zixin.example.backend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -27,13 +27,15 @@ import com.azure.storage.blob.BlobServiceClientBuilder;
 import zixin.example.backend.dao.DbRepositary;
 import zixin.example.backend.dao.Image;
 import zixin.example.backend.dao.User;
+import zixin.example.backend.service.CustomVision;
+import zixin.example.backend.service.Service;
 
 @RestController
 @CrossOrigin(origins = "${FRONTEND_HOST:*}") // Devops best practice, don't hardcode
 
-public class Service {
+public class ApiController {
     @Autowired
-    DbRepositary sqlDb;
+    Service serviceImpl;
 
     private final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=zixinchi;AccountKey=suuxxnadymD+Wk9B1yo+YCSymj2DrdgelGyp8U6Y6o3G9I69jPV8BGPTsJh7wIkcSPc6LoKAzcba+ASt+m3z8w==;EndpointSuffix=core.windows.net";
     @GetMapping("/greeting")
@@ -60,7 +62,7 @@ public class Service {
     }
 
     @PostMapping("/form")
-    public ResponseEntity<String> submit(@RequestBody String data) throws IOException {
+    public ResponseEntity<String> submit(@RequestBody String data){
         JSONObject jsonObject= new JSONObject(data);
         String name = jsonObject.getString("name");
         String email = jsonObject.getString("email");
@@ -73,8 +75,7 @@ public class Service {
         User user = new User(userId, name, email, null);
         Image image = new Image(userId, userId, rawBytes,  null);
 
-        sqlDb.saveUser(user);
-        sqlDb.saveImage(image);
+        serviceImpl.saveUserAndImage(user, image);
 
         ResponseEntity<String> result = new ResponseEntity<String>(HttpStatus.OK);
 
