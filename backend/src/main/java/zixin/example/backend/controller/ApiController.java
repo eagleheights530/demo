@@ -24,7 +24,6 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 
-import zixin.example.backend.dao.DbRepositary;
 import zixin.example.backend.dao.Image;
 import zixin.example.backend.dao.User;
 import zixin.example.backend.service.CustomVision;
